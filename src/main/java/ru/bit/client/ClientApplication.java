@@ -5,7 +5,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.reactive.function.client.WebClient;
+import ru.bit.client.service.ServiceExchange;
 
 @SpringBootApplication
 public class ClientApplication {
@@ -14,12 +14,10 @@ public class ClientApplication {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        WebClient loadBalancedClient = ctx.getBean(WebClient.Builder.class).build();
+        ServiceExchange serviceExchange = new ServiceExchange(ctx);
 
         while (true) {
-            String response = loadBalancedClient.get().uri("http://producers/convert/from/RUB/to/USD?value=10")
-                    .retrieve().toEntity(String.class).block().getBody();
-            System.out.println(response);
+            System.out.println(serviceExchange.exchange("RUB", "USD", 1000));
             Thread.sleep(5000);
         }
     }
