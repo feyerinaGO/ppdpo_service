@@ -1,0 +1,3 @@
+rootProject.name = 'ppdpo_service'
+include 'producer1'
+include 'producer2'
